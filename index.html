@@ -7,7 +7,6 @@
 <meta name="description" content="TG adapter, TikTok, edits, about me">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="./favicon.png">
 <style>
   /* ШРИФТЫ: файлы лежат в папке fonts рядом с index.html */
   @font-face {
@@ -18,6 +17,11 @@
   @font-face {
     font-family: "ERF Neot";
     src: url("fonts/ERF-Neot.ttf") format("truetype");
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Yipes";
+    src: url("fonts/Yipes.otf") format("opentype");
     font-display: swap;
   }
 
@@ -70,7 +74,6 @@
     font-weight: 400;
     line-height: 1.25;
     margin-bottom: 14px;
-    /* вместо чёрной обводки: ступенчатая тень в цвет плашек + мягкое свечение */
     text-shadow:
       2px 2px 0 #566a8a,
       4px 4px 0 #3a4863,
@@ -99,7 +102,6 @@
     line-height: 1.1;
     letter-spacing: .02em;
     cursor: pointer;
-    /* БОРТИКИ: светлая кромка + тёмное кольцо внутри + тёмное кольцо снаружи */
     border: 3px solid #e3ecfa;
     border-radius: 16px;
     box-shadow:
@@ -118,10 +120,6 @@
     outline: none;
   }
 
-  /* ВЕКТОРНЫЙ РИСУНОК на плашках (SVG внутри CSS, правится прямо тут):
-     1) острые зубцы по нижнему краю, как пряди на арте
-     2) косые полосы-«росчерки»
-     3) точечная сетка (halftone) с затуханием, как на фоне макета */
   .btn::before {
     content: "";
     position: absolute;
@@ -144,14 +142,12 @@
     -webkit-mask-image: linear-gradient(100deg, #000 0%, transparent 55%);
             mask-image: linear-gradient(100deg, #000 0%, transparent 55%);
   }
-  /* если чиби слева, точки лучше уводить вправо */
   .has-left::after {
     -webkit-mask-image: linear-gradient(260deg, #000 0%, transparent 55%);
             mask-image: linear-gradient(260deg, #000 0%, transparent 55%);
   }
 
-  /* ЧИБИ на кнопках: <img class="chibi"> внутри кнопки.
-     Добавь chibi--left, если персонаж слева. */
+  /* ЧИБИ на кнопках: затонированы в холодную серо-голубую гамму сайта + лёгкое белое свечение */
   .chibi {
     position: absolute;
     top: 50%;
@@ -160,7 +156,13 @@
     width: auto;
     transform: translateY(-50%);
     pointer-events: none;
-    filter: drop-shadow(0 3px 4px rgba(0,0,0,.4));
+    filter:
+      saturate(0.62)
+      contrast(0.95)
+      brightness(1.06)
+      hue-rotate(-8deg)
+      drop-shadow(0 0 6px rgba(227, 236, 250, 0.35))
+      drop-shadow(0 3px 5px rgba(24, 34, 52, 0.55));
   }
   .chibi--left { right: auto; left: 10px; }
   .has-right { padding-right: 104px; }
@@ -224,16 +226,15 @@
   }
   .close:hover { background: var(--btn-hover); }
 
-  /* СПИСОК ДРУЗЕЙ.
-     Телефон и узкое окно: блок идёт под плашками, по ширине колонки.
-     Широкий экран (от 1100px): прижат к левому нижнему углу окна. */
+  /* СПИСОК ДРУЗЕЙ */
   .favs {
     width: 100%;
     max-width: 520px;
-    margin: 0 auto 40px;
+    margin: 54px auto 40px;
     padding: 0 20px;
   }
   .favs-box {
+    position: relative;
     padding: 14px 16px 16px;
     background: rgba(35, 45, 64, .72);
     border: 2px solid #e3ecfa;
@@ -242,16 +243,25 @@
     -webkit-backdrop-filter: blur(3px);
             backdrop-filter: blur(3px);
   }
+  /* Первый чибик на плашке favs — в оригинальных цветах */
+  .chibi-favs {
+    position: absolute;
+    bottom: calc(100% - 6px);
+    right: 14px;
+    height: 82px;
+    width: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,.45));
+  }
   .favs h3 {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
-    font-family: "Rostov", "Montserrat", system-ui, sans-serif;
+    font-family: "Yipes", "Rostov", "Montserrat", system-ui, sans-serif;
     font-weight: 400;
-    font-size: 22px;
+    font-size: 24px;
     line-height: 1;
-    text-transform: uppercase;   /* в Rostov строчная f выглядит как t */
     color: #b8c7de;
   }
   .favs h3 svg { width: 18px; height: 18px; flex: none; fill: #e3ecfa; }
@@ -263,17 +273,17 @@
   }
   .favs li {
     max-width: 100%;
-    padding: 5px 10px 6px;
+    padding: 5px 11px 6px;
     background: var(--btn);
     border: 1.5px solid #e3ecfa;
     border-radius: 999px;
-    font-family: "Rostov", "Montserrat", system-ui, sans-serif;
-    font-size: 15px;
+    font-family: "Yipes", "Rostov", "Montserrat", system-ui, sans-serif;
+    font-size: 16px;
     line-height: 1.1;
-    overflow-wrap: anywhere;   /* длинный ник переносится, а не обрезается */
+    overflow-wrap: anywhere;
   }
 
-  /* УКРАШЕНИЯ ПО БОКАМ: только на широких экранах, где по краям пусто */
+  /* УКРАШЕНИЯ ПО БОКАМ */
   .deco { display: none; }
 
   @media (min-width: 1100px) {
@@ -314,7 +324,6 @@
       text-shadow: 2px 2px 0 rgba(58, 72, 99, .6);
       white-space: nowrap;
     }
-    /* косые «росчерки» у краёв */
     .slash {
       position: absolute;
       width: 10px;
@@ -329,9 +338,6 @@
     50%      { opacity: .7;  transform: scale(1.05); }
   }
 
-  /* ПОЯВЛЕНИЕ: подпись и плашки выезжают снизу по очереди.
-     fill-mode "backwards": после показа анимация отпускает элемент,
-     и наведение на плашку работает как раньше. */
   @keyframes rise {
     from { opacity: 0; transform: translateY(28px) scale(.95); }
     to   { opacity: 1; transform: none; }
@@ -349,8 +355,8 @@
   main > :nth-child(3) .chibi { animation-delay: .87s; }
   main > :nth-child(5) .chibi { animation-delay: 1.05s; }
   .favs { animation: rise .7s cubic-bezier(.2,.8,.25,1) .8s backwards; }
+  .chibi-favs { animation: fade .6s ease 1.15s backwards; }
 
-  /* СПЕЦЭФФЕКТ: слабо мерцающие голубые «искры» поднимаются вверх (canvas в конце страницы) */
   #fx {
     position: fixed;
     inset: 0;
@@ -366,7 +372,7 @@
   @media (prefers-reduced-motion: reduce) {
     .btn { transition: none; }
     .spark { animation: none; }
-    main > *, .chibi, .favs { animation: none; }
+    main > *, .chibi, .chibi-favs, .favs { animation: none; }
     #fx { display: none; }
   }
 </style>
@@ -377,8 +383,7 @@
 <main>
   <p class="caption">ку, я столен, ака спизженная навайбкодила сайт за 2 дня 💪</p>
 
-  <!-- ССЫЛКИ: замени # на свои -->
-  <a class="btn has-right" href="https://t.me/derrstolen" target="_blank" rel="noopener">
+  <a class="btn has-right" href="https://t.me/derrschatten" target="_blank" rel="noopener">
     TG adapter
     <img class="chibi" src="chibi/smile.png" alt="">
   </a>
@@ -396,9 +401,11 @@
   </button>
 </main>
 
-<!-- ДРУЗЬЯ: добавить ник = добавить строку <li> -->
+<!-- ДРУЗЬЯ -->
 <aside class="favs">
   <div class="favs-box">
+    <!-- Первый чибик (в оригинальных цветах) -->
+    <img class="chibi-favs" src="chibi/favs.png" alt="">
     <h3>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z"/></svg>
       my favs:
@@ -417,7 +424,7 @@
   </div>
 </aside>
 
-<!-- ДЕКОР ПО БОКАМ (виден только на широких экранах) -->
+<!-- ДЕКОР ПО БОКАМ -->
 <div class="deco deco--l" aria-hidden="true">
   <div class="slash" style="left:12%; top:6%"></div>
   <div class="slash" style="left:30%; top:20%; height:30vh"></div>
@@ -449,11 +456,10 @@
 </dialog>
 
 <script>
-  /* Искры: мало, медленно, бледно. Настройки сверху. */
   (function () {
-    const COUNT_MAX = 46;          // сколько искр максимум
-    const SPEED = 0.35;            // скорость подъёма (больше = быстрее)
-    const BRIGHT = 0.5;            // яркость (0..1)
+    const COUNT_MAX = 46;
+    const SPEED = 0.35;
+    const BRIGHT = 0.5;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const c = document.getElementById("fx");
     const ctx = c.getContext("2d");
@@ -464,12 +470,12 @@
         x: Math.random() * w,
         y: initial ? Math.random() * h : h + 10,
         r: 0.8 + Math.random() * 2.2,
-        v: (0.25 + Math.random() * 0.75) * SPEED * 40,   // пикселей в секунду
+        v: (0.25 + Math.random() * 0.75) * SPEED * 40,
         a: (0.15 + Math.random() * 0.5) * BRIGHT,
         ph: Math.random() * 6.28,
-        sw: 6 + Math.random() * 14,                      // боковое покачивание
-        tw: 0.6 + Math.random() * 1.4,                   // скорость мерцания
-        d: Math.random() < 0.3                           // часть искр ромбиками
+        sw: 6 + Math.random() * 14,
+        tw: 0.6 + Math.random() * 1.4,
+        d: Math.random() < 0.3
       };
     }
     function resize() {
@@ -488,7 +494,7 @@
         p.y -= p.v * dt;
         const x = p.x + Math.sin(t / 1000 * 0.6 + p.ph) * p.sw;
         const tw = 0.55 + 0.45 * Math.sin(t / 1000 * p.tw + p.ph);
-        const fade = Math.min(1, p.y / 80, (h - p.y) / 60 + 0.3);   // тают у верхнего края
+        const fade = Math.min(1, p.y / 80, (h - p.y) / 60 + 0.3);
         if (p.y < -10) Object.assign(p, make(false));
         ctx.globalAlpha = Math.max(0, p.a * tw * fade);
         ctx.fillStyle = "#cfe0ff";
